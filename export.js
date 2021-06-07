@@ -57,12 +57,6 @@ async function main() {
             process.exit(1);
         }
 
-        var exportname = process.argv[3];
-        // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
-        if(!exportname || exportname == "MEETING_ID"){
-            exportname = url.split("=")[1] + '.webm';
-        }
-
         var duration = process.argv[4];
         // If duration isn't defined, set it in 0
         if(!duration){
@@ -115,6 +109,14 @@ async function main() {
         // If duration was set to 0 or is greater than recDuration, use recDuration value
         if(duration == 0 || duration > recDuration){
             duration = recDuration;
+        }
+
+        var exportname = process.argv[3];
+        // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
+        if(!exportname || exportname == "MEETING_ID"){
+            exportname = await page.evaluate(() => {
+                return slugify(document.getElementById("recording-title").innerText) + '.webm';
+            });
         }
 
         await page.waitForSelector('button[class=acorn-play-button]');
