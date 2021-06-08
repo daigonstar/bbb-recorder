@@ -41,6 +41,8 @@ async function main() {
     let browser, page;
 
     try{
+        console.log('Process Starting...')
+
         if(platform == "linux"){
             xvfb.startSync()
         }
@@ -64,14 +66,6 @@ async function main() {
         // Check if duration is a natural number
         }else if(!Number.isInteger(Number(duration)) || duration < 0){
             console.warn('Duration must be a natural number!');
-            process.exit(1);
-        }
-
-        var convert = process.argv[5]
-        if(!convert){
-            convert = false
-        }else if(convert !== "true" && convert !== "false"){
-            console.warn("Invalid convert value!");
             process.exit(1);
         }
 
@@ -141,11 +135,7 @@ async function main() {
         // Wait for download of webm to complete
         await page.waitForSelector('html.downloadComplete', {timeout: 0})
 
-        if(convert){
-            convertAndCopy(exportname)
-        }else{
-            copyOnly(exportname)
-        }
+        convertAndCopy(exportname)
 
     }catch(err) {
         console.log(err)
@@ -213,27 +203,6 @@ function convertAndCopy(filename){
 
     });
 
-}
-
-function copyOnly(filename){
-
-    var copyFrom = homedir + "/Downloads/" + filename;
-    var copyTo = copyToPath + "/" + filename;
-
-    if(!fs.existsSync(copyToPath)){
-        fs.mkdirSync(copyToPath);
-    }
-
-    try {
-
-        fs.copyFileSync(copyFrom, copyTo)
-        console.log('successfully copied ' + copyTo);
-
-        fs.unlinkSync(copyFrom);
-        console.log('successfully delete ' + copyFrom);
-    } catch (err) {
-        console.log(err)
-    }
 }
 
 function slugify(text){
