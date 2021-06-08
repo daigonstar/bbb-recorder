@@ -6,6 +6,7 @@ const homedir = os.homedir();
 const platform = os.platform();
 const { copyToPath, playbackFile } = require('./env');
 const spawn = require('child_process').spawn;
+var slug = require('slug')
 
 var xvfb        = new Xvfb({
     silent: true,
@@ -118,7 +119,7 @@ async function main() {
                 return document.getElementById("recording-title").innerText;
             });
         }
-        exportname = slugify(exportname) + '.webm';
+        exportname = slug(exportname) + '.webm';
         console.log(exportname)
 
         console.log('Removing bloat from webpage...')
@@ -218,13 +219,3 @@ function convertAndCopy(filename){
     });
 
 }
-
-function slugify(text){
-    
-    return text.toString().toLowerCase()
-      .replace(/\s+/g, '-')           // Replace spaces with -
-      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-      .replace(/^-+/, '')             // Trim - from start of text
-      .replace(/-+$/, '');            // Trim - from end of text
-  }
