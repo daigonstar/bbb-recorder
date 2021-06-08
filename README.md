@@ -44,18 +44,18 @@ cp .env.example .env
 ### Recording export
 
 ```sh
-node export.js "https://BBB_HOST/playback/presentation/2.0/playback.html?meetingId=MEETING_ID" meeting.webm 10 true
+node export.js "https://BBB_HOST/playback/presentation/2.0/playback.html?meetingId=MEETING_ID"
 ```
 
 **Options**
 
-You can pass 4 args
+You can pass 1 args
 
 1) BBB recording link (mandatory)
-2) (Optional) Export file name (should be `.webm` at end). You can use "MEETING_ID" (without `.webm`) to set the meeting ID as export name. Default: MEETING_ID
-3) (Optional) Duration of recording (in seconds). You can set it to 0 use the real duration of recording. Default: real duration of recording
-4) (Optional) Convert to mp4 or not (true for convert to mp4). Default: false
 
+### Mass downloading
+
+You can download multiple recordings by using the mass shell script (`mass.sh`) this will look through a `list.txt` file for meetingIds then one after the other download the file. To use this solution change the server URL within your `.env` file.
 
 ### Live recording
 
