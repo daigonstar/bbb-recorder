@@ -115,9 +115,11 @@ async function main() {
         // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
         if(!exportname || exportname == "MEETING_ID"){
             exportname = await page.evaluate(() => {
-                return this.slugify(document.getElementById("recording-title").innerText) + '.webm';
+                return document.getElementById("recording-title").innerText;
             });
         }
+        exportname = slugify(exportname) + '.webm';
+        console.log(exportname)
 
         console.log('Removing bloat from webpage...')
         await page.waitForSelector('button[class=acorn-play-button]');
