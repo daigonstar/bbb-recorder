@@ -119,7 +119,7 @@ async function main() {
                 return document.getElementById("recording-title").innerText;
             });
         }
-        exportname = slug(exportname) + url.split("-")[2] + '.webm';
+        exportname = slug(exportname) + '_' + url.split("-")[2] + '.webm';
         console.group()
             console.log("Export is named => " + exportname)
         console.groupEnd()
