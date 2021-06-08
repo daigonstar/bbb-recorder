@@ -121,7 +121,7 @@ async function main() {
         }
         exportname = slug(exportname) + url.split("-")[2] + '.webm';
         console.group()
-            console.log("Export is named =>" + exportname)
+            console.log("Export is named => " + exportname)
         console.groupEnd()
 
 
