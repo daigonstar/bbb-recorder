@@ -6,7 +6,6 @@ const homedir = os.homedir();
 const platform = os.platform();
 const { copyToPath, playbackFile } = require('./env');
 const spawn = require('child_process').spawn;
-const slug = require('slug');
 
 var xvfb        = new Xvfb({
     silent: true,
@@ -116,7 +115,7 @@ async function main() {
         // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
         if(!exportname || exportname == "MEETING_ID"){
             exportname = await page.evaluate(() => {
-                return slug(document.getElementById("recording-title").innerText) + '.webm';
+                return slugify(document.getElementById("recording-title").innerText) + '.webm';
             });
         }
 
@@ -236,3 +235,13 @@ function copyOnly(filename){
         console.log(err)
     }
 }
+
+function slugify(text){
+    
+    return text.toString().toLowerCase()
+      .replace(/\s+/g, '-')           // Replace spaces with -
+      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+      .replace(/^-+/, '')             // Trim - from start of text
+      .replace(/-+$/, '');            // Trim - from end of text
+  }
