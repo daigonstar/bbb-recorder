@@ -128,23 +128,27 @@ async function main() {
         await page.$eval('.acorn-controls', element => element.style.opacity = "0");
         await page.click('button[class=acorn-play-button]', {waitUntil: 'domcontentloaded'});
 
-        console.log('Waiting for recording to start...')
+        console.log('Starting recording')
         await page.evaluate((x) => {
             console.log("REC_START");
             window.postMessage({type: 'REC_START'}, '*')
         })
 
+        console.log('Waiting duration...')
         // Perform any actions that have to be captured in the exported video
         await page.waitFor((duration * 1000))
 
+        console.log('Waiting for download to finish')
         await page.evaluate(filename=>{
             window.postMessage({type: 'SET_EXPORT_PATH', filename: filename}, '*')
             window.postMessage({type: 'REC_STOP'}, '*')
         }, exportname)
 
+        console.log('Download complete')
         // Wait for download of webm to complete
         await page.waitForSelector('html.downloadComplete', {timeout: 0})
 
+        console.log('Starting conversion...')
         convertAndCopy(exportname)
 
     }catch(err) {
