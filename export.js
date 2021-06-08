@@ -47,6 +47,7 @@ async function main() {
             xvfb.startSync()
         }
 
+        console.log('Obtaining URL...')
         var url = process.argv[2];
         if(!url){
             console.warn('URL undefined!');
@@ -59,6 +60,7 @@ async function main() {
             process.exit(1);
         }
 
+        console.log('Obtaining duration from command line...')
         var duration = process.argv[4];
         // If duration isn't defined, set it in 0
         if(!duration){
@@ -69,6 +71,7 @@ async function main() {
             process.exit(1);
         }
 
+        console.log('Launching browser...')
         browser = await puppeteer.launch(options)
         const pages = await browser.pages()
 
@@ -87,6 +90,7 @@ async function main() {
         })
         await page.setBypassCSP(true)
 
+        console.log('Searching for recording...')
         // Check if recording exists (search "Recording not found" message)
         var loadMsg = await page.evaluate(() => {
             return document.getElementById("load-msg").textContent;
@@ -96,6 +100,7 @@ async function main() {
             process.exit(1);
         }
 
+        console.log('Obtaining duration from webpage...')
         // Get recording duration
         var recDuration = await page.evaluate(() => {
             return document.getElementById("video").duration;
@@ -105,20 +110,23 @@ async function main() {
             duration = recDuration;
         }
 
+        console.log('Creating exportname from webpage...')
         var exportname = process.argv[3];
         // Use meeting ID as export name if it isn't defined or if its value is "MEETING_ID"
         if(!exportname || exportname == "MEETING_ID"){
             exportname = await page.evaluate(() => {
-                return slugify(document.getElementById("recording-title").innerText) + '.webm';
+                return this.slugify(document.getElementById("recording-title").innerText) + '.webm';
             });
         }
 
+        console.log('Removing bloat from webpage...')
         await page.waitForSelector('button[class=acorn-play-button]');
         await page.$eval('#navbar', element => element.style.display = "none");
         await page.$eval('#copyright', element => element.style.display = "none");
         await page.$eval('.acorn-controls', element => element.style.opacity = "0");
         await page.click('button[class=acorn-play-button]', {waitUntil: 'domcontentloaded'});
 
+        console.log('Waiting for recording to start...')
         await page.evaluate((x) => {
             console.log("REC_START");
             window.postMessage({type: 'REC_START'}, '*')
