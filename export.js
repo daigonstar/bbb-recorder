@@ -119,8 +119,11 @@ async function main() {
                 return document.getElementById("recording-title").innerText;
             });
         }
-        exportname = slug(exportname) + '.webm';
-        console.log(exportname)
+        exportname = slug(exportname) + url.split("-")[2] + '.webm';
+        console.group()
+            console.log("Export is named =>" + exportname)
+        console.groupEnd()
+
 
         console.log('Removing bloat from webpage...')
         await page.waitForSelector('button[class=acorn-play-button]');
@@ -135,7 +138,7 @@ async function main() {
             window.postMessage({type: 'REC_START'}, '*')
         })
 
-        console.log('Waiting duration...')
+        console.log('Waiting recording duration...')
         // Perform any actions that have to be captured in the exported video
         await page.waitFor((duration * 1000))
 
